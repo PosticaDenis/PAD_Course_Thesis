@@ -7,11 +7,12 @@ namespace WebApplication.Data
     {
         protected DatabaseApplicationContext()
         {
+            Database.Migrate();
         }
 
         public DatabaseApplicationContext(DbContextOptions options) : base(options)
         {
-            
+            Database.Migrate();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

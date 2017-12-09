@@ -1,0 +1,15 @@
+version: '2'
+
+services:
+  web:
+    build: WebApplication
+    ports:
+      - 8080:80
+    environment:
+      ConnectionStrings:Default:  Server=sql;Database=movie;User ID=postgres;Password=3x4mpl3
+    depends_on:
+      - sql
+  sql:
+    image: postgres:10
+    environment:
+      POSTGRES_PASSWORD:  3x4mpl3
