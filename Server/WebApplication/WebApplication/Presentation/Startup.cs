@@ -29,7 +29,8 @@ namespace WebApplication.Presentation
                 options => options.UseNpgsql(Configuration.GetConnectionString("Default")), ServiceLifetime.Singleton);
             services.AddSingleton<IMovieService, MovieService>();
             services.AddSingleton<IActorService, ActorService>();
-            services.AddSingleton(typeof(IRepository<>), typeof(EfRepository<>));
+            services.AddSingleton<IRepository<Data.Entities.Actor>, ActorRepository>();
+            services.AddSingleton<IRepository<Data.Entities.Movie>, MovieRepository>();
             services.AddLinks(config =>
             {
                 config.AddPolicy<Actor>(policy => policy

@@ -11,6 +11,7 @@ namespace WebApplication.Data
 
         public DatabaseApplicationContext(DbContextOptions options) : base(options)
         {
+            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

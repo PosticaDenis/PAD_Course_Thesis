@@ -8,7 +8,7 @@ namespace WebApplication.Data.Repository
     public class EfRepository<T> : IRepository<T> where T : class,IEntity
     {
         private readonly DatabaseApplicationContext _databaseContext;
-        private DbSet<T> DbSet => _databaseContext.Set<T>();
+        protected virtual IQueryable<T> DbSet => _databaseContext.Set<T>();
 
         public EfRepository(DatabaseApplicationContext databaseContext)
         {
