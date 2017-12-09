@@ -22,13 +22,13 @@ namespace WebApplication.Presentation
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc(options => { options.RespectBrowserAcceptHeader = true; })
+                .AddXmlSerializerFormatters();
             services.AddDbContext<DatabaseApplicationContext>(
                 options => options.UseNpgsql(Configuration.GetConnectionString("Default")), ServiceLifetime.Singleton);
             services.AddSingleton<IMovieService, MovieService>();
             services.AddSingleton<IActorService, ActorService>();
             services.AddSingleton(typeof(IRepository<>), typeof(EfRepository<>));
-            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
