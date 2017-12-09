@@ -19,6 +19,13 @@ namespace WebApplication.Data
 
             modelBuilder.Entity<Movie>();
             modelBuilder.Entity<Actor>();
+            modelBuilder.Entity<ActorMovie>()
+                .HasKey(am => new
+                {
+                    am.ActorId,
+                    am.MovieId
+                });
+
         }
     }
 }

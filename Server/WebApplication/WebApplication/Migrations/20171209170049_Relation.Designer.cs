@@ -11,9 +11,10 @@ using WebApplication.Data;
 namespace WebApplication.Migrations
 {
     [DbContext(typeof(DatabaseApplicationContext))]
-    partial class DatabaseApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20171209170049_Relation")]
+    partial class Relation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
