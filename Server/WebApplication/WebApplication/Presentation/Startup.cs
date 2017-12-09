@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using WebApplication.Data;
+using WebApplication.Data.Repository;
+using WebApplication.Domain.Services;
+using WebApplication.Presentation.Models;
 
-namespace WebApplication
+namespace WebApplication.Presentation
 {
     public class Startup
     {
@@ -24,6 +24,10 @@ namespace WebApplication
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddDbContext<DatabaseApplicationContext>(
+                options => options.UseNpgsql(Configuration.GetConnectionString("Default")), ServiceLifetime.Singleton);
+            services.AddSingleton<IMovieService, MovieService>();
+            services.AddSingleton(typeof(IRepository<>), typeof(EfRepository<>));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,6 +39,13 @@ namespace WebApplication
             }
 
             app.UseMvc();
+            
+            Mapper.Initialize(RegisterMapping);
+        }
+
+        public void RegisterMapping(IMapperConfigurationExpression conf)
+        {
+            conf.CreateMap<Movie, Data.Entities.Movie>();
         }
     }
 }
