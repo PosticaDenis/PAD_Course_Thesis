@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
-using AutoMapper;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication.Domain.Services;
+using WebApplication.Presentation.Mapper;
 using WebApplication.Presentation.Models;
 
 namespace WebApplication.Presentation.Controllers
@@ -19,56 +20,41 @@ namespace WebApplication.Presentation.Controllers
         [HttpGet]
         public IEnumerable<Movie> Get()
         {
-            return new Movie[]
-            {
-                new Movie
-                {
-                    Rating = new decimal(4.5),
-                    ReleasedYear = 2010,
-                    Sales = new decimal(40000),
-                    Title = "Clone"
-                }
-            };
+            return _movieService.Get()
+                .Select(entity => MovieMapper.Map(entity));
         }
-        
+
         [HttpGet("{id}")]
         public Movie Get(int id)
         {
-            return Mapper.Map<Movie>(_movieService.Get(id));
+            return MovieMapper.Map(_movieService.Get(id));
         }
-        
+
         [HttpPost]
-        public Movie Post([FromBody]Movie movie)
+        public Movie Post([FromBody] Movie movie)
         {
-            // todo 
-            return new Movie
-            {
-                Rating = new decimal(4.5),
-                ReleasedYear = 2010,
-                Sales = new decimal(40000),
-                Title = "Clone"
-            };
+            var entity = MovieMapper.Map(movie);
+            entity = _movieService.Insert(entity);
+
+
+            return MovieMapper.Map(entity);
         }
-        
+
         [HttpPut("{id}")]
-        public Movie Put(int id, [FromBody]Movie movie)
+        public Movie Put(int id, [FromBody] Movie movie)
         {
-            // todo 
-            return new Movie
-            {
-                Rating = new decimal(4.5),
-                ReleasedYear = 2010,
-                Sales = new decimal(40000),
-                Title = "Clone"
-            };
+            var entity = _movieService.Get(id);
+
+            MovieMapper.Map(movie, entity);
+            entity = _movieService.Update(entity);
+
+            return MovieMapper.Map(entity);
         }
-        
+
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            // todo
+            _movieService.Delete(id);
         }
-        
-        
     }
 }

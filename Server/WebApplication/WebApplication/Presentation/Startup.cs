@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -28,6 +27,7 @@ namespace WebApplication.Presentation
                 options => options.UseNpgsql(Configuration.GetConnectionString("Default")), ServiceLifetime.Singleton);
             services.AddSingleton<IMovieService, MovieService>();
             services.AddSingleton(typeof(IRepository<>), typeof(EfRepository<>));
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,13 +39,6 @@ namespace WebApplication.Presentation
             }
 
             app.UseMvc();
-            
-            Mapper.Initialize(RegisterMapping);
-        }
-
-        public void RegisterMapping(IMapperConfigurationExpression conf)
-        {
-            conf.CreateMap<Movie, Data.Entities.Movie>();
         }
     }
 }
