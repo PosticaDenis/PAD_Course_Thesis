@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.0.0
 MinimumVisualStudioVersion = 10.0.0.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication", "WebApplication\WebApplication.csproj", "{F6DE1CDF-3D12-4576-8DBC-E580F8D689D3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoadBalancer", "LoadBalancer\LoadBalancer.csproj", "{5AF57D1D-2917-4395-A601-22DC192417C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{F6DE1CDF-3D12-4576-8DBC-E580F8D689D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6DE1CDF-3D12-4576-8DBC-E580F8D689D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6DE1CDF-3D12-4576-8DBC-E580F8D689D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AF57D1D-2917-4395-A601-22DC192417C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AF57D1D-2917-4395-A601-22DC192417C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AF57D1D-2917-4395-A601-22DC192417C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AF57D1D-2917-4395-A601-22DC192417C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
