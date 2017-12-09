@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using RiskFirst.Hateoas;
 using WebApplication.Domain.Services;
+using WebApplication.Presentation.Helper;
 using WebApplication.Presentation.Mapper;
 using WebApplication.Presentation.Models;
 
@@ -11,48 +14,54 @@ namespace WebApplication.Presentation.Controllers
     public class ActorController : Controller
     {
         private readonly IActorService _actorService;
+        private readonly ILinksService _linksService;
 
-        public ActorController(IActorService actorService)
+        public ActorController(IActorService actorService, ILinksService linksService)
         {
             _actorService = actorService;
+            _linksService = linksService;
         }
 
-        [HttpGet]
-        public IEnumerable<Actor> Get()
+        [HttpGet(Name = "GetActor")]
+        public async Task<IEnumerable<Actor>> Get()
         {
-            return _actorService.Get()
-                .Select(entity => ActorMapper.Map(entity));
+            return await _actorService.Get()
+                .Select(entity => ActorMapper.Map(entity))
+                .AddLinks(_linksService);
         }
 
-        [HttpGet("{id}")]
-        public Actor Get(int id)
+        [HttpGet("{id}", Name = "GetActorById")]
+        public async Task<Actor> Get(int id)
         {
-            return ActorMapper.Map(_actorService.Get(id));
+            return await ActorMapper.Map(_actorService.Get(id))
+                .AddLinks(_linksService);
         }
 
-        [HttpPost]
-        public Actor Post([FromBody] Actor actor)
+        [HttpPost(Name = "PostActor")]
+        public async Task<Actor> Post([FromBody] Actor actor)
         {
             var entity = ActorMapper.Map(actor);
             entity = _actorService.Insert(entity);
 
 
-            return ActorMapper.Map(entity);
+            return await ActorMapper.Map(entity)
+                .AddLinks(_linksService);
         }
 
-        [HttpPut("{id}")]
-        public Actor Put(int id, [FromBody] Actor actor)
+        [HttpPut("{id}", Name = "PutActor")]
+        public async Task<Actor> Put(int id, [FromBody] Actor actor)
         {
             var entity = _actorService.Get(id);
 
             ActorMapper.Map(actor, entity);
             entity = _actorService.Update(entity);
 
-            return ActorMapper.Map(entity);
+            return await ActorMapper.Map(entity)
+                .AddLinks(_linksService);
         }
 
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("{id}", Name = "DeleteActor")]
+        public async Task Delete(int id)
         {
             _actorService.Delete(id);
         }

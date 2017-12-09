@@ -1,6 +1,8 @@
-﻿namespace WebApplication.Presentation.Models
+﻿using RiskFirst.Hateoas.Models;
+
+namespace WebApplication.Presentation.Models
 {
-    public class Movie
+    public class Movie : LinkContainer
     {
         public int Id { get; set; }
 
