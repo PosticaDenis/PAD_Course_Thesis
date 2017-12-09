@@ -26,6 +26,7 @@ namespace WebApplication.Presentation
             services.AddDbContext<DatabaseApplicationContext>(
                 options => options.UseNpgsql(Configuration.GetConnectionString("Default")), ServiceLifetime.Singleton);
             services.AddSingleton<IMovieService, MovieService>();
+            services.AddSingleton<IActorService, ActorService>();
             services.AddSingleton(typeof(IRepository<>), typeof(EfRepository<>));
             
         }

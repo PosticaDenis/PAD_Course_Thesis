@@ -18,6 +18,7 @@ namespace WebApplication.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Movie>();
+            modelBuilder.Entity<Actor>();
         }
     }
 }

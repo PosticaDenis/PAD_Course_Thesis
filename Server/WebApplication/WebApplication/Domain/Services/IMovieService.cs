@@ -3,12 +3,8 @@ using WebApplication.Data.Entities;
 
 namespace WebApplication.Domain.Services
 {
-    public interface IMovieService
+    public interface IMovieService : IService<Movie>
     {
-        Movie Get(int id);
-        Movie Insert(Movie movie);
-        IEnumerable<Movie> Get();
-        Movie Update(Movie movie);
-        void Delete(int id);
+        
     }
 }
