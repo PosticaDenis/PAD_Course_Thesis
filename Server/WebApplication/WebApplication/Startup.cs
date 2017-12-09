@@ -9,7 +9,7 @@ using WebApplication.Data.Repository;
 using WebApplication.Domain.Services;
 using WebApplication.Presentation.Models;
 
-namespace WebApplication.Presentation
+namespace WebApplication
 {
     public class Startup
     {
