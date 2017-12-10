@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using LoadBalancer.LoadDistribution;
 
@@ -8,7 +10,6 @@ namespace LoadBalancer
 {
     public class LoadBalancerListener
     {
-        private static readonly int BufferSize = 1024*1024*5; // 5mb buffer;
         private readonly HttpListener _httpListener;
         private readonly ILoadDistribution _loadDistribution;
 
@@ -28,7 +29,7 @@ namespace LoadBalancer
 
             _httpListener.Start();
             _httpListener.BeginGetContext(OnContext, null);
-            Console.ReadKey();
+            Thread.Sleep(TimeSpan.FromDays(7));
             _httpListener.Stop();
         }
 
@@ -38,23 +39,17 @@ namespace LoadBalancer
             _httpListener.BeginGetContext(OnContext, null);
             var request = context.Request;
             var uri = GetRedirectUri(request);
-            
+
             Console.WriteLine($"Received a request. Redirecting to {uri}");
             var webRequest = WebRequest.Create(uri);
             CopyHelper.CopyRequestDetails(webRequest, request);
             CopyHelper.CopyHeaders(request.Headers, webRequest.Headers);
-
+            CopyHelper.CopyInputStream(webRequest, request);
 
             var webResponse = webRequest.GetResponse();
 
             CopyHelper.CopyHeaders(webResponse.Headers, context.Response.Headers);
-
-            byte[] buffer = new byte[BufferSize];
-            var read = webResponse.GetResponseStream().Read(buffer, 0, buffer.Length);
-            context.Response.OutputStream.Write(buffer, 0, read);
-            context.Response.OutputStream.Close();
-            context.Response.Close();
-
+            CopyHelper.CopyResponse(webResponse, context.Response);
         }
 
         private Uri GetRedirectUri(HttpListenerRequest request)

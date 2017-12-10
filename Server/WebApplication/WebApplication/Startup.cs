@@ -1,8 +1,15 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using MessageBus.Events;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using RiskFirst.Hateoas;
 using WebApplication.Data;
 using WebApplication.Data.Repository;
@@ -31,6 +38,7 @@ namespace WebApplication
             services.AddSingleton<IActorService, ActorService>();
             services.AddSingleton<IRepository<Data.Entities.Actor>, ActorRepository>();
             services.AddSingleton<IRepository<Data.Entities.Movie>, MovieRepository>();
+            services.AddSingleton(new MessageBus.MessageBus(Configuration.GetConnectionString("MessageBroker")));
             services.AddLinks(config =>
             {
                 config.AddPolicy<Actor>(policy => policy
@@ -48,12 +56,37 @@ namespace WebApplication
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            NotifyUp(app);
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
             app.UseMvc();
+        }
+
+        private static void NotifyUp(IApplicationBuilder app)
+        {
+            var logger = app.ApplicationServices.GetService<ILogger>();
+            var messageBus = app.ApplicationServices.GetService<MessageBus.MessageBus>();
+            var serverAddressesFeature = app.ServerFeatures.Get<IServerAddressesFeature>();
+            var addr = serverAddressesFeature.Addresses.First();
+            try
+            {
+                // Get the local computer host name.
+                string hostName = Dns.GetHostName();
+                hostName = Dns.GetHostEntry(hostName).AddressList[0].ToString();
+                var port = new string(addr.Split(":").Last().Where(Char.IsDigit).ToArray());
+                string fullPath = $"http://{hostName}:{port}";
+                messageBus.Publish("server", new ServerUpEvent
+                {
+                    Url = fullPath
+                });
+            }
+            catch (SocketException e)
+            {
+                logger.LogError("Unable to send notification to LoadBalancer", e);
+            }
         }
     }
 }

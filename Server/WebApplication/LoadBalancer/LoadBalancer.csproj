@@ -3,4 +3,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MessageBus\MessageBus.csproj" />
+  </ItemGroup>
 </Project>

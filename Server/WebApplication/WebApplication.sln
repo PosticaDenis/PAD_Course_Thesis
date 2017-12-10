@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication", "WebApplic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoadBalancer", "LoadBalancer\LoadBalancer.csproj", "{5AF57D1D-2917-4395-A601-22DC192417C6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageBus", "MessageBus\MessageBus.csproj", "{AA0A96B4-511C-4A31-87B9-C144FEBC4CD4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{5AF57D1D-2917-4395-A601-22DC192417C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5AF57D1D-2917-4395-A601-22DC192417C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5AF57D1D-2917-4395-A601-22DC192417C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA0A96B4-511C-4A31-87B9-C144FEBC4CD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA0A96B4-511C-4A31-87B9-C144FEBC4CD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA0A96B4-511C-4A31-87B9-C144FEBC4CD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA0A96B4-511C-4A31-87B9-C144FEBC4CD4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

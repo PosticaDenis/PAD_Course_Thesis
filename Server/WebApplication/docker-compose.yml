@@ -1,15 +1,33 @@
-version: '2'
+version: '3'
 
 services:
-  web:
-    build: WebApplication
+  loadbalancer:
+    build:
+      context: ./
+      dockerfile: LoadBalancer.Dockerfile
     ports:
       - 8080:80
     environment:
+      LoadBalancerListenUrl:  http://*:80/
+      MessageBrokerConnectionString:  Host=messagebroker;Username=guest;Password=guest
+    depends_on:
+      - messagebroker
+  web:
+    build:
+      context: ./
+      dockerfile: WebApplication.Dockerfile
+    environment:
       ConnectionStrings:Default:  Server=sql;Database=movie;User ID=postgres;Password=3x4mpl3
+      ConnectionStrings:MessageBroker:  Host=messagebroker;Username=guest;Password=guest
     depends_on:
       - sql
+      - messagebroker
   sql:
     image: postgres:10
     environment:
       POSTGRES_PASSWORD:  3x4mpl3
+  messagebroker:
+    image: "rabbitmq:3-management"
+    hostname: "messagebroker"
+    ports:
+      - 15672:15672
