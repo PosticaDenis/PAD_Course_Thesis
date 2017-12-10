@@ -7,43 +7,43 @@ namespace WebApplication.Domain.Services
 {
     public class AbstractService<T> : IService<T> where T : class, IEntity
     {
-        protected readonly IRepository<T> _repository;
+        protected readonly IRepository<T> MovieRepository;
 
-        public AbstractService(IRepository<T> repository)
+        public AbstractService(IRepository<T> movieRepository)
         {
-            _repository = repository;
+            MovieRepository = movieRepository;
         }
 
-        public T Get(int id)
+        public T Get(Guid id)
         {
-            return _repository.Get(id);
+            return MovieRepository.Get(id);
         }
 
         public T Insert(T entity)
         {
-            return _repository.Insert(entity);
+            return MovieRepository.Insert(entity);
         }
 
         public IEnumerable<T> Get()
         {
-            return _repository.Get();
+            return MovieRepository.Get();
         }
 
         public T Update(T entity)
         {
-            return _repository.Update(entity);
+            return MovieRepository.Update(entity);
         }
 
-        public void Delete(int id)
+        public void Delete(Guid id)
         {
-            var entity = _repository.Get(id);
+            var entity = MovieRepository.Get(id);
 
             if (entity == null)
             {
                 throw new Exception("Entity not found");
             }
 
-            _repository.Delete(entity);
+            MovieRepository.Delete(entity);
         }
     }
 }

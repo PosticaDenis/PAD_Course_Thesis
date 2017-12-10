@@ -7,13 +7,13 @@ using RabbitMQ.Client.Events;
 
 namespace MessageBus
 {
-    public class MessageBus
+    public class MessageBroker
     {
         private readonly IModel _channel;
         private readonly IConnection _createConnection;
         private readonly ConnectionFactory _connectionFactory;
 
-        public MessageBus(String connectionString)
+        public MessageBroker(String connectionString)
         {
             var dbConnectionStringBuilder = new DbConnectionStringBuilder();
             dbConnectionStringBuilder.ConnectionString = connectionString;

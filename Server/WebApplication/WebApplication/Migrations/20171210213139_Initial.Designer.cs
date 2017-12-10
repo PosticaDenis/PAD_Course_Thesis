@@ -11,8 +11,8 @@ using WebApplication.Data;
 namespace WebApplication.Migrations
 {
     [DbContext(typeof(DatabaseApplicationContext))]
-    [Migration("20171209170049_Relation")]
-    partial class Relation
+    [Migration("20171210213139_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,7 +23,7 @@ namespace WebApplication.Migrations
 
             modelBuilder.Entity("WebApplication.Data.Entities.Actor", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("FirstName");
@@ -37,9 +37,9 @@ namespace WebApplication.Migrations
 
             modelBuilder.Entity("WebApplication.Data.Entities.ActorMovie", b =>
                 {
-                    b.Property<int>("ActorId");
+                    b.Property<Guid>("ActorId");
 
-                    b.Property<int>("MovieId");
+                    b.Property<Guid>("MovieId");
 
                     b.HasKey("ActorId", "MovieId");
 
@@ -50,7 +50,7 @@ namespace WebApplication.Migrations
 
             modelBuilder.Entity("WebApplication.Data.Entities.Movie", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<decimal>("Rating");

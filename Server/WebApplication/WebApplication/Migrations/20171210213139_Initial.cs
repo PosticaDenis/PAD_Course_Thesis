@@ -4,16 +4,44 @@ using System.Collections.Generic;
 
 namespace WebApplication.Migrations
 {
-    public partial class Relation : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Actor",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Actor", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Movie",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Rating = table.Column<decimal>(nullable: false),
+                    ReleasedYear = table.Column<int>(nullable: false),
+                    Sales = table.Column<decimal>(nullable: false),
+                    Title = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Movie", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ActorMovie",
                 columns: table => new
                 {
-                    ActorId = table.Column<int>(nullable: false),
-                    MovieId = table.Column<int>(nullable: false)
+                    ActorId = table.Column<Guid>(nullable: false),
+                    MovieId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -42,6 +70,12 @@ namespace WebApplication.Migrations
         {
             migrationBuilder.DropTable(
                 name: "ActorMovie");
+
+            migrationBuilder.DropTable(
+                name: "Actor");
+
+            migrationBuilder.DropTable(
+                name: "Movie");
         }
     }
 }

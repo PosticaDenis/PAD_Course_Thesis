@@ -17,4 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\MessageBus\MessageBus.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\Synchronizer" />
+  </ItemGroup>
 </Project>

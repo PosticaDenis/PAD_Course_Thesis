@@ -1,12 +1,11 @@
 ﻿using System;
-using RiskFirst.Hateoas.Models;
 
-namespace WebApplication.Presentation.Models
+namespace WebApplication.Data.Events
 {
-    public class Movie : LinkContainer
+    public class MovieEventEntity : IEventEntity
     {
         public Guid Id { get; set; }
-
+       
         public string Title { get; set; }
 
         public int ReleasedYear { get; set; }

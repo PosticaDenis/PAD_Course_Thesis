@@ -7,7 +7,7 @@ namespace WebApplication.Domain.Services
 {
     public class MovieService : AbstractService<Movie>,IMovieService
     {
-        public MovieService(IRepository<Movie> repository) : base(repository)
+        public MovieService(IMovieRepository movieRepository) : base(movieRepository)
         {
             
         }

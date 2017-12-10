@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace WebApplication.Data.Entities
 {
@@ -9,7 +10,7 @@ namespace WebApplication.Data.Entities
             Actors = new List<ActorMovie>();
         }
 
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public virtual string Title { get; set; }
 

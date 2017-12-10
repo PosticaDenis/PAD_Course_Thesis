@@ -1,7 +1,9 @@
-﻿namespace WebApplication.Data.Entities
+﻿using System;
+
+namespace WebApplication.Data.Entities
 {
     public interface IEntity
     {
-        int Id { get; set; }
+        Guid Id { get; set; }
     }
 }

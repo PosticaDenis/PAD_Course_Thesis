@@ -22,7 +22,7 @@ namespace WebApplication.Migrations
 
             modelBuilder.Entity("WebApplication.Data.Entities.Actor", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("FirstName");
@@ -36,9 +36,9 @@ namespace WebApplication.Migrations
 
             modelBuilder.Entity("WebApplication.Data.Entities.ActorMovie", b =>
                 {
-                    b.Property<int>("ActorId");
+                    b.Property<Guid>("ActorId");
 
-                    b.Property<int>("MovieId");
+                    b.Property<Guid>("MovieId");
 
                     b.HasKey("ActorId", "MovieId");
 
@@ -49,7 +49,7 @@ namespace WebApplication.Migrations
 
             modelBuilder.Entity("WebApplication.Data.Entities.Movie", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<decimal>("Rating");

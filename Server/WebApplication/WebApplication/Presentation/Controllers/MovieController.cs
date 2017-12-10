@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +32,7 @@ namespace WebApplication.Presentation.Controllers
         }
 
         [HttpGet("{id}", Name = "GetMovieById")]
-        public async Task<Movie> Get(int id)
+        public async Task<Movie> Get(Guid id)
         {
             return await MovieMapper.Map(_movieService.Get(id))
                 .AddLinks(_linksService);
@@ -49,7 +50,7 @@ namespace WebApplication.Presentation.Controllers
         }
 
         [HttpPut("{id}", Name = "PutMovie")]
-        public async Task<Movie> Put(int id, [FromBody] Movie movie)
+        public async Task<Movie> Put(Guid id, [FromBody] Movie movie)
         {
             var entity = _movieService.Get(id);
 
@@ -61,7 +62,7 @@ namespace WebApplication.Presentation.Controllers
         }
 
         [HttpDelete("{id}", Name = "DeleteMovie")]
-        public async Task Delete(int id)
+        public async Task Delete(Guid id)
         {
             _movieService.Delete(id);
         }

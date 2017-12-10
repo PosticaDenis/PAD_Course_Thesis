@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +32,7 @@ namespace WebApplication.Presentation.Controllers
         }
 
         [HttpGet("{id}", Name = "GetActorById")]
-        public async Task<Actor> Get(int id)
+        public async Task<Actor> Get(Guid id)
         {
             return await ActorMapper.Map(_actorService.Get(id))
                 .AddLinks(_linksService);
@@ -49,7 +50,7 @@ namespace WebApplication.Presentation.Controllers
         }
 
         [HttpPut("{id}", Name = "PutActor")]
-        public async Task<Actor> Put(int id, [FromBody] Actor actor)
+        public async Task<Actor> Put(Guid id, [FromBody] Actor actor)
         {
             var entity = _actorService.Get(id);
 
@@ -61,7 +62,7 @@ namespace WebApplication.Presentation.Controllers
         }
 
         [HttpDelete("{id}", Name = "DeleteActor")]
-        public async Task Delete(int id)
+        public async Task Delete(Guid id)
         {
             _actorService.Delete(id);
         }
