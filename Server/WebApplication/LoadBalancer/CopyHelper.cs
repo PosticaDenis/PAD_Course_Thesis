@@ -1,13 +1,14 @@
-﻿using System.Collections.Specialized;
+﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Net;
 
 namespace LoadBalancer
 {
     public static class CopyHelper
     {
-        private static readonly int BufferSize = 1024 * 1024 * 5; // 5mb buffer;
-        
-        public static void CopyHeaders(NameValueCollection nameValueCollection, WebHeaderCollection webHeaderCollection)
+        public static readonly int BufferSize = 1024 * 1024 * 5; // 5mb buffer;
+
+        public static void CopyHeaders(NameValueCollection nameValueCollection, NameValueCollection webHeaderCollection)
         {
             foreach (string requestHeader in nameValueCollection)
             {
@@ -15,29 +16,32 @@ namespace LoadBalancer
             }
         }
 
-        public static void CopyHeaders(WebHeaderCollection webHeaderCollection, WebHeaderCollection headerCollection)
-        {
-            foreach (string webResponseHeader in webHeaderCollection)
-            {
-                headerCollection.Add(webResponseHeader, webHeaderCollection[webResponseHeader]);
-            }
-        }
-
         public static void CopyInputStream(WebRequest webRequest, HttpListenerRequest request)
         {
-            byte[] buffer = new byte[BufferSize];
-            if (request.InputStream.CanRead && request.InputStream.Length > 0)
+            if (!request.HasEntityBody)
             {
-                var i = request.InputStream.Read(buffer, 0, BufferSize);
-                webRequest.GetRequestStream().Write(buffer, 0, i);
+                return;
+            }
+            using (System.IO.Stream body = request.InputStream) // here we have data
+            {
+                using (System.IO.StreamReader reader = new System.IO.StreamReader(body, request.ContentEncoding))
+                {
+                    var readToEnd = reader.ReadToEnd();
+
+                    using (var outStream = webRequest.GetRequestStream())
+                    {
+                        using (System.IO.StreamWriter writer = new System.IO.StreamWriter(outStream, request.ContentEncoding))
+                        {
+                            writer.Write(readToEnd);
+                        }
+                    }
+                }
             }
         }
 
-        public static void CopyResponse(WebResponse webResponse, HttpListenerResponse httpListenerResponse)
+        public static void CopyResponse(HttpListenerResponse httpListenerResponse, byte[] buffer, int size)
         {
-            byte[] buffer = new byte[BufferSize];
-            var read = webResponse.GetResponseStream().Read(buffer, 0, buffer.Length);
-            httpListenerResponse.OutputStream.Write(buffer, 0, read);
+            httpListenerResponse.OutputStream.Write(buffer, 0, size);
             httpListenerResponse.OutputStream.Close();
             httpListenerResponse.Close();
         }
@@ -47,6 +51,27 @@ namespace LoadBalancer
             webRequest.Method = request.HttpMethod;
             webRequest.ContentLength = request.ContentLength64;
             webRequest.ContentType = request.ContentType;
+        }
+
+        public static Dictionary<string, string> ToDictionary(this NameValueCollection col)
+        {
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            foreach (var k in col.AllKeys)
+            {
+                dict.Add(k, col[k]);
+            }
+            return dict;
+        }
+
+        public static NameValueCollection ToNameValueCollection(this Dictionary<string, string> dictionary)
+        {
+            var nameValueCollection = new NameValueCollection();
+            foreach (var keyValuePair in dictionary)
+            {
+                nameValueCollection.Add(keyValuePair.Key, keyValuePair.Value);
+            }
+
+            return nameValueCollection;
         }
     }
 }

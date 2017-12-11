@@ -6,4 +6,7 @@
   <ItemGroup>
     <ProjectReference Include="..\MessageBus\MessageBus.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="StackExchange.Redis" Version="1.2.6" />
+  </ItemGroup>
 </Project>

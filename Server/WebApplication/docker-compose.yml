@@ -10,8 +10,10 @@ services:
     environment:
       LoadBalancerListenUrl:  http://*:80/
       MessageBrokerConnectionString:  Host=messagebroker;Username=guest;Password=guest
+      RedisHost:  redis
     depends_on:
       - messagebroker
+      - redis
   web:
     build:
       context: ./
@@ -26,6 +28,8 @@ services:
     image: postgres:10
     environment:
       POSTGRES_PASSWORD:  3x4mpl3
+  redis:
+    image:  redis
   messagebroker:
     image: "rabbitmq:3-management"
     hostname: "messagebroker"
