@@ -3,13 +3,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using WebApplication.Data.Entities;
 using WebApplication.Data.Events;
+using WebApplication.Presentation.Models;
+using Movie = WebApplication.Data.Entities.Movie;
 
 namespace WebApplication.Data.Repository
 {
     public class MovieSynchronizedRepository : EfSynchronizedRepository<Movie, MovieEventEntity>, IMovieRepository
     {
-        public MovieSynchronizedRepository(DatabaseApplicationContext databaseContext, MessageBus.MessageBroker messageBroker, ILogger<IEventSynchronizer<Movie, MovieEventEntity>> logger)
-            : base(databaseContext, messageBroker, logger)
+        public MovieSynchronizedRepository(DatabaseApplicationContext databaseContext,
+            MessageBus.MessageBroker messageBroker, ILogger<IEventSynchronizer<Movie, MovieEventEntity>> logger,
+            ServerDescriptor descriptor)
+            : base(databaseContext, messageBroker, logger, descriptor)
         {
         }
 

@@ -16,6 +16,7 @@ using WebApplication.Data.Entities;
 using WebApplication.Data.Events;
 using WebApplication.Data.Repository;
 using WebApplication.Domain.Services;
+using WebApplication.Presentation.Models;
 using Actor = WebApplication.Presentation.Models.Actor;
 using Movie = WebApplication.Presentation.Models.Movie;
 
@@ -41,6 +42,7 @@ namespace WebApplication
             services.AddSingleton<IActorService, ActorService>();
             services.AddSingleton<IActorRepository, ActorSynchronizedRepository>();
             services.AddSingleton<IMovieRepository, MovieSynchronizedRepository>();
+            services.AddSingleton(new ServerDescriptor());
             services.AddSingleton(new MessageBus.MessageBroker(Configuration.GetConnectionString("MessageBroker")));
             services.AddLinks(config =>
             {
@@ -61,14 +63,13 @@ namespace WebApplication
         {
             try
             {
-                NotifyUp(app);
+                InitServerUp(app);
+                InitSync(app);
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Unable to send UP notification to message broker");
             }
-
-            InitSync(app);
 
             if (env.IsDevelopment())
             {
@@ -98,10 +99,22 @@ namespace WebApplication
             broker.Subscribe<EntityDeletedEvent>(eventSynchronizer.DeleteQueue, eventSynchronizer.OnDeleteEvent);
         }
 
-        private static void NotifyUp(IApplicationBuilder app)
+        private static void InitServerUp(IApplicationBuilder app)
+        {
+            
+            var messageBus = app.ApplicationServices.GetService<MessageBus.MessageBroker>();
+            var serviceDescriptor = app.ApplicationServices.GetService<ServerDescriptor>();
+
+            serviceDescriptor.Url = GetServerAddr(app);
+            messageBus.Publish("server", new ServerUpEvent
+            {
+                Url = serviceDescriptor.Url
+            });
+        }
+
+        private static string GetServerAddr(IApplicationBuilder app)
         {
             var logger = app.ApplicationServices.GetService<ILogger>();
-            var messageBus = app.ApplicationServices.GetService<MessageBus.MessageBroker>();
             var serverAddressesFeature = app.ServerFeatures.Get<IServerAddressesFeature>();
             var addr = serverAddressesFeature.Addresses.First();
             try
@@ -110,16 +123,14 @@ namespace WebApplication
                 string hostName = Dns.GetHostName();
                 hostName = Dns.GetHostEntry(hostName).AddressList[0].ToString();
                 var port = new string(addr.Split(":").Last().Where(Char.IsDigit).ToArray());
-                string fullPath = $"http://{hostName}:{port}";
-                messageBus.Publish("server", new ServerUpEvent
-                {
-                    Url = fullPath
-                });
+                return $"http://{hostName}:{port}";
             }
             catch (SocketException e)
             {
                 logger.LogError("Unable to send notification to LoadBalancer", e);
             }
+
+            return string.Empty;
         }
     }
 }

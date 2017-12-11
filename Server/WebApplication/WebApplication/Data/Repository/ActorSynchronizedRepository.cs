@@ -3,13 +3,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using WebApplication.Data.Entities;
 using WebApplication.Data.Events;
+using WebApplication.Presentation.Models;
+using Actor = WebApplication.Data.Entities.Actor;
 
 namespace WebApplication.Data.Repository
 {
     public class ActorSynchronizedRepository : EfSynchronizedRepository<Actor, ActorEventEntity>, IActorRepository
     {
-        public ActorSynchronizedRepository(DatabaseApplicationContext databaseContext, MessageBus.MessageBroker messageBroker, ILogger<IEventSynchronizer<Actor, ActorEventEntity>> logger) : base(
-            databaseContext, messageBroker, logger)
+        public ActorSynchronizedRepository(DatabaseApplicationContext databaseContext,
+            MessageBus.MessageBroker messageBroker,
+            ILogger<IEventSynchronizer<Actor, ActorEventEntity>> logger,
+            ServerDescriptor descriptor) : base(
+            databaseContext, messageBroker, logger, descriptor)
         {
         }
 
