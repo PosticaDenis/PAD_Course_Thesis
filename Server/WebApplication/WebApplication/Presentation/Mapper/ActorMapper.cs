@@ -11,7 +11,6 @@ namespace WebApplication.Presentation.Mapper
             destination.FirstName = source.FirstName;
             destination.LastName = source.LastName;
             destination.Id = source.Id;
-            destination.Movies = source.Movies?.Select(a => a.MovieId).ToArray();
 
             return destination;
         }
@@ -25,10 +24,6 @@ namespace WebApplication.Presentation.Mapper
         {
             destination.FirstName = source.FirstName;
             destination.LastName = source.LastName;
-            destination.Movies = source.Movies?.Select(id => new ActorMovie
-            {
-                MovieId = id,
-            }).ToList();
             
             return destination;
         }

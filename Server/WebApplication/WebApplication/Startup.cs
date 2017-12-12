@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using MessageBus.Events;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -34,6 +35,7 @@ namespace WebApplication
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            Thread.Sleep(10000);
             services.AddMvc(options => { options.RespectBrowserAcceptHeader = true; })
                 .AddXmlSerializerFormatters();
             services.AddDbContext<DatabaseApplicationContext>(

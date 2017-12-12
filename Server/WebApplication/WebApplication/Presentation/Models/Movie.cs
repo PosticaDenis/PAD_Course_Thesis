@@ -14,7 +14,5 @@ namespace WebApplication.Presentation.Models
         public decimal Sales { get; set; }
 
         public decimal Rating { get; set; }
-
-        public Guid[] Actors { get; set; }
     }
 }

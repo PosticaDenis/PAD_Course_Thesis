@@ -13,7 +13,6 @@ namespace WebApplication.Presentation.Mapper
             destination.Sales = source.Sales;
             destination.Title = source.Title;
             destination.Id = source.Id;
-            destination.Actors = source.Actors?.Select(a => a.ActorId).ToArray();
 
             return destination;
         }
@@ -29,10 +28,6 @@ namespace WebApplication.Presentation.Mapper
             destination.ReleasedYear = source.ReleasedYear;
             destination.Sales = source.Sales;
             destination.Title = source.Title;
-            destination.Actors = source.Actors?.Select(id => new ActorMovie
-            {
-                MovieId = source.Id
-            });
 
             return destination;
         }

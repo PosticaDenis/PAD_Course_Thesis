@@ -11,7 +11,7 @@ using WebApplication.Data;
 namespace WebApplication.Migrations
 {
     [DbContext(typeof(DatabaseApplicationContext))]
-    [Migration("20171210213139_Initial")]
+    [Migration("20171212100153_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,19 +35,6 @@ namespace WebApplication.Migrations
                     b.ToTable("Actor");
                 });
 
-            modelBuilder.Entity("WebApplication.Data.Entities.ActorMovie", b =>
-                {
-                    b.Property<Guid>("ActorId");
-
-                    b.Property<Guid>("MovieId");
-
-                    b.HasKey("ActorId", "MovieId");
-
-                    b.HasIndex("MovieId");
-
-                    b.ToTable("ActorMovie");
-                });
-
             modelBuilder.Entity("WebApplication.Data.Entities.Movie", b =>
                 {
                     b.Property<Guid>("Id")
@@ -64,19 +51,6 @@ namespace WebApplication.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Movie");
-                });
-
-            modelBuilder.Entity("WebApplication.Data.Entities.ActorMovie", b =>
-                {
-                    b.HasOne("WebApplication.Data.Entities.Actor", "Actor")
-                        .WithMany("Movies")
-                        .HasForeignKey("ActorId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("WebApplication.Data.Entities.Movie", "Movie")
-                        .WithMany("Actors")
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

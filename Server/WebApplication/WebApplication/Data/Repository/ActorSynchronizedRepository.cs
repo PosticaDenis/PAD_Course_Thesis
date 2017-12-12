@@ -18,8 +18,6 @@ namespace WebApplication.Data.Repository
         {
         }
 
-        protected override IQueryable<Actor> DbSet => base.DbSet.Include(p => p.Movies);
-
         public override ActorEventEntity CreateEventModel(Actor entity)
         {
             return new ActorEventEntity
@@ -27,7 +25,6 @@ namespace WebApplication.Data.Repository
                 Id = entity.Id,
                 FirstName = entity.FirstName,
                 LastName = entity.LastName,
-                Movies = entity.Movies?.Select(m => m.MovieId).ToArray()
             };
         }
 
@@ -40,10 +37,6 @@ namespace WebApplication.Data.Repository
 
             entity.FirstName = @event.FirstName;
             entity.LastName = @event.LastName;
-            entity.Movies = @event.Movies?.Select(m => new ActorMovie
-            {
-                MovieId = m
-            }).ToList();
         }
 
         public override Actor CreateEntity()
