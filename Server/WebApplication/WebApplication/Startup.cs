@@ -13,11 +13,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RiskFirst.Hateoas;
 using WebApplication.Data;
-using WebApplication.Data.Entities;
-using WebApplication.Data.Events;
 using WebApplication.Data.Repository;
 using WebApplication.Domain.Services;
-using WebApplication.Presentation.Models;
 using Actor = WebApplication.Presentation.Models.Actor;
 using Movie = WebApplication.Presentation.Models.Movie;
 
@@ -42,8 +39,8 @@ namespace WebApplication
                 options => options.UseNpgsql(Configuration.GetConnectionString("Default")), ServiceLifetime.Singleton);
             services.AddSingleton<IMovieService, MovieService>();
             services.AddSingleton<IActorService, ActorService>();
-            services.AddSingleton<IActorRepository, ActorSynchronizedRepository>();
-            services.AddSingleton<IMovieRepository, MovieSynchronizedRepository>();
+            services.AddSingleton<IActorRepository, ActorRepository>();
+            services.AddSingleton<IMovieRepository, MovieRepository>();
             services.AddSingleton(new ServerDescriptor());
             services.AddSingleton(new MessageBus.MessageBroker(Configuration.GetConnectionString("MessageBroker")));
             services.AddLinks(config =>
@@ -66,7 +63,6 @@ namespace WebApplication
             try
             {
                 InitServerUp(app);
-                InitSync(app);
             }
             catch (Exception ex)
             {
@@ -81,25 +77,6 @@ namespace WebApplication
             app.UseMvc();
         }
 
-        private static void InitSync(IApplicationBuilder app)
-        {
-            var messageBus = app.ApplicationServices.GetService<MessageBus.MessageBroker>();
-            var actorRepository = app.ApplicationServices.GetService<IActorRepository>();
-            var movieRepository = app.ApplicationServices.GetService<IMovieRepository>();
-
-            Console.WriteLine("Registering actor synchronizer");
-            Register(actorRepository, messageBus);
-            Console.WriteLine("Registering movie synchronizer");
-            Register(movieRepository, messageBus);
-        }
-
-        private static void Register<T, TEvent>(IEventSynchronizer<T, TEvent> eventSynchronizer, MessageBus.MessageBroker broker)
-            where T : IEntity where TEvent : IEventEntity
-        {
-            broker.Subscribe<EntityInsertEvent<TEvent>>(eventSynchronizer.InsertQueue, eventSynchronizer.OnInsertEvent);
-            broker.Subscribe<EntityUpdatedEvent<TEvent>>(eventSynchronizer.UpdateQueue, eventSynchronizer.OnUpdateEvent);
-            broker.Subscribe<EntityDeletedEvent>(eventSynchronizer.DeleteQueue, eventSynchronizer.OnDeleteEvent);
-        }
 
         private static void InitServerUp(IApplicationBuilder app)
         {
