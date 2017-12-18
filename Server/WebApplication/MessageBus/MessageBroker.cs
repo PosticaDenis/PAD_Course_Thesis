@@ -17,26 +17,24 @@ namespace MessageBus
         {
             var dbConnectionStringBuilder = new DbConnectionStringBuilder();
             dbConnectionStringBuilder.ConnectionString = connectionString;
-            
+
             var hostName = dbConnectionStringBuilder["Host"].ToString();
             Helper.WaitForPortOpen(1000, hostName, 5672);
             _connectionFactory =
                 new ConnectionFactory()
                 {
-                    HostName = hostName, 
-                    UserName = dbConnectionStringBuilder["Username"].ToString(), 
+                    HostName = hostName,
+                    UserName = dbConnectionStringBuilder["Username"].ToString(),
                     Password = dbConnectionStringBuilder["Password"].ToString()
                 };
             _createConnection = _connectionFactory.CreateConnection();
             _channel = _createConnection.CreateModel();
         }
 
-        public void Subscribe<T>(string exchange, Action<T> onEvent)
+        public void Subscribe<T>(string queue, Action<T> onEvent)
         {
-            var queueName = _channel.QueueDeclare().QueueName;
-            ExchangeDeclare(exchange);
-            BindQueue<T>(exchange, queueName);
-            
+            Declare(queue);
+
             var consumer = new EventingBasicConsumer(_channel);
             consumer.Received += (model, ea) =>
             {
@@ -46,32 +44,28 @@ namespace MessageBus
                 onEvent(obj);
             };
 
-            _channel.BasicConsume(queue: queueName,
+            _channel.BasicConsume(queue: queue,
                 autoAck: true,
                 consumer: consumer);
         }
 
-        private void BindQueue<T>(string exchange, string queueName)
+        public void Publish(string queue, object message)
         {
-            _channel.QueueBind(queue: queueName,
-                exchange: exchange,
-                routingKey: "");
-        }
-
-        public void Publish(string exchange, object message)
-        {
-            ExchangeDeclare(exchange);
-
+            Declare(queue);
             var serializeObject = JsonConvert.SerializeObject(message);
-            _channel.BasicPublish(exchange: exchange,
-                routingKey: string.Empty,
+            _channel.BasicPublish(exchange: "",
+                routingKey: queue,
                 basicProperties: null,
                 body: Encoding.ASCII.GetBytes(serializeObject));
         }
 
-        private void ExchangeDeclare(string exchange)
+        private void Declare(string queue)
         {
-            _channel.ExchangeDeclare(exchange, "fanout");
+            _channel.QueueDeclare(queue: queue,
+                durable: false,
+                exclusive: false,
+                autoDelete: false,
+                arguments: null);
         }
     }
 }

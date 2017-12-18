@@ -32,7 +32,6 @@ namespace WebApplication
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            Thread.Sleep(10000);
             services.AddMvc(options => { options.RespectBrowserAcceptHeader = true; })
                 .AddXmlSerializerFormatters();
             services.AddDbContext<DatabaseApplicationContext>(
@@ -46,14 +45,22 @@ namespace WebApplication
             services.AddLinks(config =>
             {
                 config.AddPolicy<Actor>(policy => policy
-                    .RequireRoutedLink("get", "GetActorById", actor => new { id = actor.Id })
-                    .RequireRoutedLink("update", "PutActor", actor => new { id = actor.Id })
-                    .RequireRoutedLink("delete", "DeleteActor", actor => new { id = actor.Id }));
+                    .RequireRoutedLink("get", "GetActorById", actor => new {id = actor.Id})
+                    .RequireRoutedLink("update", "PutActor", actor => new {id = actor.Id})
+                    .RequireRoutedLink("delete", "DeleteActor", actor => new {id = actor.Id}));
                 config.AddPolicy<Movie>(policy => policy
                     .RequireRoutedLink("get", "GetMovieById", movie => new {id = movie.Id})
                     .RequireRoutedLink("update", "PutMovie", movie => new {id = movie.Id})
                     .RequireRoutedLink("delete", "DeleteMovie", movie => new {id = movie.Id})
                 );
+            });
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials());
             });
         }
 
@@ -80,7 +87,6 @@ namespace WebApplication
 
         private static void InitServerUp(IApplicationBuilder app)
         {
-            
             var messageBus = app.ApplicationServices.GetService<MessageBus.MessageBroker>();
             var serviceDescriptor = app.ApplicationServices.GetService<ServerDescriptor>();
 
