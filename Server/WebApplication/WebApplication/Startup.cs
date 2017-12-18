@@ -32,7 +32,11 @@ namespace WebApplication
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(options => { options.RespectBrowserAcceptHeader = true; })
+            services.AddMvc(options =>
+                {
+                    options.RespectBrowserAcceptHeader = true;
+                    options.Filters.Add<ApiExceptionFilterAttribute>();
+                })
                 .AddXmlSerializerFormatters();
             services.AddDbContext<DatabaseApplicationContext>(
                 options => options.UseNpgsql(Configuration.GetConnectionString("Default")), ServiceLifetime.Singleton);
