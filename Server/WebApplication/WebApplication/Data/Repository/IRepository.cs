@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using WebApplication.Data.Entities;
-using WebApplication.Data.Events;
 
 namespace WebApplication.Data.Repository
 {
@@ -9,10 +8,8 @@ namespace WebApplication.Data.Repository
     {
         T Get(Guid id);
         IEnumerable<T> Get();
-        T Insert(T entity, bool createEvent = true);
-        T Update(T entity, bool createEvent = true);
-        void Delete(T entity, bool createEvent = true);
-
-
+        T Insert(T entity);
+        T Update(T entity);
+        void Delete(T entity);
     }
 }

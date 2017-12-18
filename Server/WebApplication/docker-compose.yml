@@ -14,38 +14,24 @@ services:
     depends_on:
       - messagebroker
       - redis
-  web_md:
+  web:
     build:
       context: ./
       dockerfile: WebApplication.Dockerfile
     environment:
-      ConnectionStrings:Default:  Server=sql_md;Database=movie;User ID=postgres;Password=3x4mpl3
+      ConnectionStrings:Default:  Server=sql;Database=movie;User ID=postgres;Password=3x4mpl3
       ConnectionStrings:MessageBroker:  Host=messagebroker;Username=guest;Password=guest
     depends_on:
-      - sql_md
+      - sql
       - messagebroker
-  sql_md:
+  sql:
     image: postgres:10
     environment:
       POSTGRES_PASSWORD:  3x4mpl3
 
-  web_us:
-    build:
-      context: ./
-      dockerfile: WebApplication.Dockerfile
-    environment:
-      ConnectionStrings:Default:  Server=sql_us;Database=movie;User ID=postgres;Password=3xfdsapl3
-      ConnectionStrings:MessageBroker:  Host=messagebroker;Username=guest;Password=guest
-    depends_on:
-      - sql_us
-      - messagebroker
-  sql_us:
-    image: postgres:10
-    environment:
-      POSTGRES_PASSWORD:  3xfdsapl3
-
   redis:
     image:  redis
+    
   messagebroker:
     image: "rabbitmq:3-management"
     hostname: "messagebroker"
