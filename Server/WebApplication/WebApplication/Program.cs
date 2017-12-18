@@ -14,7 +14,10 @@ namespace WebApplication
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder()
-                .ConfigureAppConfiguration((builderContext, config) => { config.AddEnvironmentVariables(); })
+                .ConfigureAppConfiguration((builderContext, config) =>
+                {
+                    config.AddEnvironmentVariables();
+                })
                 .UseStartup<Startup>()
                 .Build();
     }
