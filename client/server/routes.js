@@ -11,10 +11,6 @@ function Routes (app) {
         res.send('da');
     })
 
-    var login = require('./app/ctrls/login/login');
-    app.post('/alo', login.authorizationApi);
-
-
     var mainPage = require('./app/ctrls/main-page/main-page.js');
     app.get('/basic-info', mainPage.getBasicInfoApi);
     app.post('/basic-info', mainPage.updateBasicInfoApi);
