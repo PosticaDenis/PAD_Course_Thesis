@@ -1,0 +1,15 @@
+{
+  "name": "hr",
+  "description": "people management",
+  "main": "server.js",
+  "authors": [
+    "My project"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "dependencies": {
+    "angular-ui-router": "^1.0.11",
+    "angular": "^1.6.7",
+    "materialize": "^0.100.2"
+  }
+}
