@@ -34,12 +34,6 @@ namespace WebApplication
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(options =>
-                {
-                    options.RespectBrowserAcceptHeader = true;
-                    options.Filters.Add<ApiExceptionFilterAttribute>();
-                })
-                .AddXmlSerializerFormatters();
             services.AddDbContext<DatabaseApplicationContext>(
                 options => options.UseNpgsql(Configuration.GetConnectionString("Default")), ServiceLifetime.Singleton);
             services.AddSingleton<IMovieService, MovieService>();
@@ -60,11 +54,20 @@ namespace WebApplication
                     .RequireRoutedLink("delete", "DeleteMovie", movie => new {id = movie.Id})
                 );
             });
-            services.AddCors();
-            services.Configure<MvcOptions>(options =>
-            {
-                options.Filters.Add(new CorsAuthorizationFilterFactory("AllowSpecificOrigin"));
+            services.AddCors(option => {  
+                option.AddPolicy("AllowAll", 
+                    policy => policy.AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials()
+                );
             });
+            services.AddMvc(options =>
+                {
+                    options.RespectBrowserAcceptHeader = true;
+                    options.Filters.Add<ApiExceptionFilterAttribute>();
+                })
+                .AddXmlSerializerFormatters();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -84,9 +87,8 @@ namespace WebApplication
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors("AllowAll");
             app.UseMvc();
-            app.UseCors(option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials());  
-
         }
 
 
