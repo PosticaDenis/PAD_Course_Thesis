@@ -1,13 +1,17 @@
 <div class="container">
-  <ul class="collection">
-      <li class="collection-item avatar">
-          <i class="material-icons circle red">play_arrow</i>
-          <span class="title">Title</span>
-          <p>Released year <br>
-            Sales <br>
-            Rating
-          </p>
-          <a href="#!" class="secondary-content"><i class="material-icons">edit</i></a>
+    <div class="fixed-action-btn horizontal click-to-toggle upload">
+        <a href="#!/movies/upload" class="btn-floating btn-large waves-effect waves-light red">
+            <i class="material-icons">add</i></a>
+    </div>
+
+    <ul class="collection">
+        <li class="collection-item avatar" ng-repeat="movie in movie.movies">
+            <i class="material-icons circle red">play_arrow</i>
+            <span class="title">{{movie.title}}</span>
+            <p>Year: {{movie.releasedYear}}</p>
+            <p>Sales: {{movie.sales}}</p>
+            <p><i class="material-icons">star</i> <span>{{movie.rating}}</span></p>
+            <a href="#!/movies/edit/{{movie.id}}" class="secondary-content"><i class="material-icons">edit</i></a>
         </li>
-</ul>
+    </ul>
 </div>
