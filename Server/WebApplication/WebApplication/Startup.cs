@@ -7,6 +7,8 @@ using MessageBus.Events;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server.Features;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Cors.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -58,13 +60,10 @@ namespace WebApplication
                     .RequireRoutedLink("delete", "DeleteMovie", movie => new {id = movie.Id})
                 );
             });
-            services.AddCors(options =>
+            services.AddCors();
+            services.Configure<MvcOptions>(options =>
             {
-                options.AddPolicy("CorsPolicy",
-                    builder => builder.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .AllowCredentials());
+                options.Filters.Add(new CorsAuthorizationFilterFactory("AllowSpecificOrigin"));
             });
         }
 
@@ -86,6 +85,8 @@ namespace WebApplication
             }
 
             app.UseMvc();
+            app.UseCors(option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials());  
+
         }
 
 
