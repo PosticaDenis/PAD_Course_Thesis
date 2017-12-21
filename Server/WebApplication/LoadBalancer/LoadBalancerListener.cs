@@ -44,7 +44,8 @@ namespace LoadBalancer
             _httpListener.BeginGetContext(OnContext, null);
             var request = context.Request;
 
-            var list = context.Request.Url.LocalPath.Split("/").Where(s => !string.IsNullOrEmpty(s))
+            var requestUrl = new Uri(context.Request.Url.ToString().ToLower());
+            var list = requestUrl.LocalPath.Split("/").Where(s => !string.IsNullOrEmpty(s))
                 .Take(2)
                 .ToList();
             
@@ -60,7 +61,7 @@ namespace LoadBalancer
                 }
             }
 
-            var redisKey = context.Request.Url.PathAndQuery;
+            var redisKey = requestUrl.PathAndQuery;
             if (readingResource &&
                 _connectionMultiplexer.GetDatabase(0).KeyExists(redisKey))
             {
