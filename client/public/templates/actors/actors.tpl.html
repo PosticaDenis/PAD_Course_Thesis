@@ -1,0 +1,14 @@
+<div ng-show="actor.actors" class="container">
+    <div class="fixed-action-btn horizontal click-to-toggle upload">
+        <a href="#!/actors/upload" class="btn-floating btn-large waves-effect waves-light red">
+            <i class="material-icons">add</i></a>
+    </div>
+    <ul class="collection">
+        <li class="collection-item avatar" ng-repeat="actor in actor.actors">
+            <i class="material-icons circle gray">avatar</i>
+            <p class="author">{{actor.firstName}}</p>
+            <p class="author">{{actor.lastName}}</p>
+            <a href="#!/actors/edit/{{actor.id}}" class="secondary-content"><i class="material-icons">edit</i></a>
+        </li>
+    </ul>
+</div>

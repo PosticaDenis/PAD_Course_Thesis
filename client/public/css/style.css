@@ -1,6 +1,21 @@
-.container{
+.container {
     padding-right: 15px;
     padding-left: 15px;
     margin-right: auto;
     margin-left: auto;
+}
+
+.title {
+    color: #26a69a;
+    font-weight: bold;
+}
+
+.author {
+    font-size: 24px;
+    color: #26a69a;
+}
+
+.upload {
+    float: right;
+    margin-top: 10px;
 }
